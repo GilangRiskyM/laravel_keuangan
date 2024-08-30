@@ -17,7 +17,7 @@
     </div>
     <hr>
     <div class="col-md-6">
-        <label class="mb-2">Filter Tanggal Mendaftar</label>
+        <label class="mb-2">Filter Data</label>
         <form action="/pemasukan" method="get">
             <div class="input-group">
                 <span class="input-group-text">Filter Data : </span>
