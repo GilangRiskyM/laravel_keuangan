@@ -122,7 +122,7 @@ class PemasukanController extends Controller
 
     function deletedPemasukan()
     {
-        $sql = Masuk::onlyTrashed()->paginate(20);
+        $sql = Masuk::onlyTrashed()->latest()->paginate(20);
 
         return view('pemasukan.data-terhapus', [
             'sql' => $sql
