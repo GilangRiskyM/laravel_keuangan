@@ -20,7 +20,7 @@
         <label class="mb-2">Filter Data</label>
         <form action="/pemasukan" method="get">
             <div class="input-group">
-                <span class="input-group-text">Filter Data : </span>
+                <span class="input-group-text">Pilih Data</span>
                 <select name="filter_tanggal" id="" class="form-select">
                     <option value="" {{ $tanggal == '' ? 'selected' : null }}>Semua Data</option>
                     <option value="hari_ini" {{ $tanggal == 'hari_ini' ? 'selected' : null }}>Hari Ini</option>

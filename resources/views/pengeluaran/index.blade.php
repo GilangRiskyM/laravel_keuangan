@@ -20,7 +20,7 @@
         <label class="mb-2">Filter Data</label>
         <form action="/pengeluaran" method="get">
             <div class="input-group">
-                <span class="input-group-text">Filter Data : </span>
+                <span class="input-group-text">Pilih Data</span>
                 <select name="filter_tanggal" id="" class="form-select">
                     <option value="" {{ $tanggal == '' ? 'selected' : null }}>Semua Data</option>
                     <option value="hari_ini" {{ $tanggal == 'hari_ini' ? 'selected' : null }}>Hari Ini</option>
@@ -33,6 +33,29 @@
                     <option value="tahun_lalu" {{ $tanggal == 'tahun_lalu' ? 'selected' : null }}>Tahun Lalu</option>
                 </select>
                 <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="/pengeluaran" class="btn btn-danger">Batal</a>
+            </div>
+        </form>
+    </div>
+    <hr>
+    <div class="col-md-6">
+        <label for="" class="mb-2">Export Data</label>
+        <form action="/pengeluaran/export" method="post">
+            @csrf
+            <div class="input-group">
+                <span class="input-group-text">Pilih Data</span>
+                <select name="ekspor" id="" class="form-select">
+                    <option value="">Semua Data</option>
+                    <option value="hari_ini">Hari Ini</option>
+                    <option value="kemarin">Kemarin</option>
+                    <option value="minggu_ini">Minggu Ini</option>
+                    <option value="minggu_lalu">Minggu Lalu</option>
+                    <option value="bulan_ini">Bulan Ini</option>
+                    <option value="bulan_lalu">Bulan Lalu</option>
+                    <option value="tahun_ini">Tahun Ini</option>
+                    <option value="tahun_lalu">Tahun Lalu</option>
+                </select>
+                <button type="submit" class="btn btn-success">Export</button>
                 <a href="/pengeluaran" class="btn btn-danger">Batal</a>
             </div>
         </form>

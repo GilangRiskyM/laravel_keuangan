@@ -29,11 +29,11 @@ class PemasukanController extends Controller
             $sql = Masuk::whereBetween('created_at', [Carbon::now()->subWeek(), Carbon::now()])->latest()->paginate(20)->onEachSide(2);
             $sql2 = Masuk::whereBetween('created_at', [Carbon::now()->subWeek(), Carbon::now()])->get();
         } elseif ($tanggal == 'bulan_ini') {
-            $sql = Masuk::whereMonth('created_at', Carbon::now()->month)->latest()->paginate(20)->onEachSide(2);
-            $sql2 = Masuk::whereMonth('created_at', Carbon::now()->month)->get();
+            $sql = Masuk::whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->latest()->paginate(20)->onEachSide(2);
+            $sql2 = Masuk::whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->get();
         } elseif ($tanggal == 'bulan_lalu') {
-            $sql = Masuk::whereMonth('created_at', Carbon::now()->subMonth()->month)->latest()->paginate(20)->onEachSide(2);
-            $sql2 = Masuk::whereMonth('created_at', Carbon::now()->subMonth()->month)->get();
+            $sql = Masuk::whereMonth('created_at', Carbon::now()->subMonth()->month)->whereYear('created_at', Carbon::now()->year)->latest()->paginate(20)->onEachSide(2);
+            $sql2 = Masuk::whereMonth('created_at', Carbon::now()->subMonth()->month)->whereYear('created_at', Carbon::now()->year)->get();
         } elseif ($tanggal == 'tahun_ini') {
             $sql = Masuk::whereYear('created_at', Carbon::now()->year)->latest()->paginate(20)->onEachSide(2);
             $sql2 = Masuk::whereYear('created_at', Carbon::now()->year)->get();

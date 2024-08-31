@@ -42,3 +42,4 @@ Route::get('/pengeluaran/restore', [PengeluaranController::class, 'deletedPengel
 Route::get('/restore-pengeluaran/{id}', [PengeluaranController::class, 'restoreData']);
 Route::get('/pengeluaran/hapus_permanen/{id}', [PengeluaranController::class, 'deletePermanen']);
 Route::delete('/force_delete-pengeluaran/{id}', [PengeluaranController::class, 'forceDelete']);
+// Route::post('/pengeluaran/export', [PengeluaranController::class, 'export']);

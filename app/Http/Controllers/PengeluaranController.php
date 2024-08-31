@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EditKeluarRequest;
-use App\Http\Requests\TambahPengeluaranRequest;
 use App\Models\Keluar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use PhpParser\Node\Expr\Isset_;
 use Illuminate\Support\Facades\Session;
+use App\Http\Requests\EditKeluarRequest;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Http\Requests\TambahPengeluaranRequest;
 
 class PengeluaranController extends Controller
 {
@@ -28,11 +31,11 @@ class PengeluaranController extends Controller
             $sql = Keluar::whereBetween('created_at', [Carbon::now()->subWeek(), Carbon::now()])->latest()->paginate(20)->onEachSide(2);
             $sql2 = Keluar::whereBetween('created_at', [Carbon::now()->subWeek(), Carbon::now()])->get();
         } elseif ($tanggal == 'bulan_ini') {
-            $sql = Keluar::whereMonth('created_at', Carbon::now()->month)->latest()->paginate(20)->onEachSide(2);
-            $sql2 = Keluar::whereMonth('created_at', Carbon::now()->month)->get();
+            $sql = Keluar::whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->latest()->paginate(20)->onEachSide(2);
+            $sql2 = Keluar::whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->get();
         } elseif ($tanggal == 'bulan_lalu') {
-            $sql = Keluar::whereMonth('created_at', Carbon::now()->subMonth()->month)->latest()->paginate(20)->onEachSide(2);
-            $sql2 = Keluar::whereMonth('created_at', Carbon::now()->subMonth()->month)->get();
+            $sql = Keluar::whereMonth('created_at', Carbon::now()->subMonth()->month)->whereYear('created_at', Carbon::now()->year)->latest()->paginate(20)->onEachSide(2);
+            $sql2 = Keluar::whereMonth('created_at', Carbon::now()->subMonth()->month)->whereYear('created_at', Carbon::now()->year)->get();
         } elseif ($tanggal == 'tahun_ini') {
             $sql = Keluar::whereYear('created_at', Carbon::now()->year)->latest()->paginate(20)->onEachSide(2);
             $sql2 = Keluar::whereYear('created_at', Carbon::now()->year)->get();
@@ -164,5 +167,76 @@ class PengeluaranController extends Controller
         }
 
         return redirect('/pengeluaran/restore');
+    }
+
+    function export(Request $request)
+    {
+        $ekspor = $request->ekspor;
+
+        if ($ekspor == 'hari_ini') {
+            $sql = Keluar::whereDate('created_at', Carbon::today())->latest()->get();
+            $filter = 'Hari Ini tanggal ' . Carbon::today()->format('d-m-Y');
+        } elseif ($ekspor == 'kemarin') {
+            $sql = Keluar::whereDate('created_at', Carbon::yesterday())->latest()->get();
+            $filter = 'Kemarin tanggal ' . Carbon::yesterday()->format('d-m-Y');
+        } elseif ($ekspor == 'minggu_ini') {
+            $sql = Keluar::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->latest()->get();
+            $filter = 'Minggu Ini tanggal ' . Carbon::now()->startOfWeek()->format('d-m-Y') . ' sampai ' . Carbon::now()->endOfWeek()->format('d-m-Y');
+        } elseif ($ekspor == 'minggu_lalu') {
+            $sql = Keluar::whereBetween('created_at', [Carbon::now()->subWeek(), Carbon::now()])->latest()->get();
+            $filter = 'Minggu Lalu tanggal ' . Carbon::now()->subWeek()->format('d-m-Y') . ' sampai ' . Carbon::now()->format('d-m-Y');
+        } elseif ($ekspor == 'bulan_ini') {
+            $sql = Keluar::whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->latest()->get();
+            $filter = 'Bulan ' . Carbon::now()->month . ' tahun ' . Carbon::now()->year;
+        } elseif ($ekspor == 'bulan_lalu') {
+            $sql = Keluar::whereMonth('created_at', Carbon::now()->subMonth()->month)->whereYear('created_at', Carbon::now()->year)->latest()->get();
+            $filter = 'Bulan ' . Carbon::now()->subMonth()->month . ' tahun ' . Carbon::now()->year;
+        } elseif ($ekspor == 'tahun_ini') {
+            $sql = Keluar::whereYear('created_at', Carbon::now()->year)->latest()->get();
+            $filter = 'Tahun Ini ' . Carbon::now()->year;
+        } elseif ($ekspor == 'tahun_lalu') {
+            $sql = Keluar::whereYear('created_at', Carbon::now()->subYear()->year)->latest()->get();
+            $filter = 'Tahun Lalu ' . Carbon::now()->subYear()->year;
+        } else {
+            $sql = Keluar::latest()->get();
+            $filter  = 'Semua Data';
+        }
+
+        $total = 0;
+        foreach ($sql as $data) {
+            $total += $data->jumlah_pengeluaran;
+        }
+
+        // dd($filter);
+
+        $spreadsheet = new Spreadsheet();
+        $filename = 'Laporan Pengeluaran ' . $filter . '.xlsx';
+        $no = 1;
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = 2;
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Keterangan Pengeluaran');
+        $sheet->setCellValue('C1', 'Keterangan Pengeluaran');
+        $sheet->setCellValue('D1', 'Jumlah Pengeluaran (Rp)');
+        $sheet->setCellValue('E1', 'Total Pengeluaran (Rp)');
+
+        foreach ($sql as $data) {
+            $sheet->setCellValue('A' . $rows, $no++);
+            $sheet->setCellValue('B' . $rows, $data->ket_pengeluaran);
+            $sheet->setCellValue('C' . $rows, date_format($data->created_at, 'd/m/Y'));
+            $sheet->setCellValue('D' . $rows, $data->jumlah_pengeluaran);
+            $rows++;
+        }
+
+        $sheet->setCellValue('E2', $total);
+
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
     }
 }
