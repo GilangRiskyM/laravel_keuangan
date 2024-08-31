@@ -14,6 +14,6 @@ class Keluar extends Model
 
     protected $fillable = [
         'ket_pengeluaran',
-        'ket_pemasukan'
+        'jumlah_pengeluaran'
     ];
 }

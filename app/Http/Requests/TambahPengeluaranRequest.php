@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TambahPemasukanRequest extends FormRequest
+class TambahPengeluaranRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,16 @@ class TambahPemasukanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ket_pemasukan' => 'required',
-            'jumlah_pemasukan' => 'required'
+            'ket_pengeluaran' => 'required',
+            'jumlah_pengeluaran' => 'required'
         ];
     }
 
     public function messages()
     {
         return [
-            'ket_pemasukan.required' => 'Keterangan Pemasukan wajib diisi!',
-            'jumlah_pemasukan.required' => 'Jumlah Pemasukan wajib diisi!'
+            'ket_pengeluaran.required' => 'Keterangan Pengeluaran wajib diisi!',
+            'jumlah_pengeluaran.required' => 'Jumlah Pengeluaran wajib diisi!'
         ];
     }
 }
