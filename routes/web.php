@@ -30,6 +30,7 @@ Route::get('/pemasukan/restore', [PemasukanController::class, 'deletedPemasukan'
 Route::get('/restore-pemasukan/{id}', [PemasukanController::class, 'restoreData']);
 Route::get('/pemasukan/hapus_permanen/{id}', [PemasukanController::class, 'deletePermanen']);
 Route::delete('/force_delete-pemasukan/{id}', [PemasukanController::class, 'forceDelete']);
+Route::post('/pemasukan/export', [PemasukanController::class, 'export']);
 
 Route::get('/pengeluaran', [PengeluaranController::class, 'index']);
 Route::get('/pengeluaran/tambah', [PengeluaranController::class, 'create']);
@@ -42,4 +43,4 @@ Route::get('/pengeluaran/restore', [PengeluaranController::class, 'deletedPengel
 Route::get('/restore-pengeluaran/{id}', [PengeluaranController::class, 'restoreData']);
 Route::get('/pengeluaran/hapus_permanen/{id}', [PengeluaranController::class, 'deletePermanen']);
 Route::delete('/force_delete-pengeluaran/{id}', [PengeluaranController::class, 'forceDelete']);
-// Route::post('/pengeluaran/export', [PengeluaranController::class, 'export']);
+Route::post('/pengeluaran/export', [PengeluaranController::class, 'export']);

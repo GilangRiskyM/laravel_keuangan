@@ -16,7 +16,7 @@
         <a href="/pengeluaran/restore" class="btn btn-secondary">Restore Data</a>
     </div>
     <hr>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <label class="mb-2">Filter Data</label>
         <form action="/pengeluaran" method="get">
             <div class="input-group">
@@ -38,27 +38,30 @@
         </form>
     </div>
     <hr>
-    <div class="col-md-6">
-        <label for="" class="mb-2">Export Data</label>
-        <form action="/pengeluaran/export" method="post">
-            @csrf
-            <div class="input-group">
-                <span class="input-group-text">Pilih Data</span>
-                <select name="ekspor" id="" class="form-select">
-                    <option value="">Semua Data</option>
-                    <option value="hari_ini">Hari Ini</option>
-                    <option value="kemarin">Kemarin</option>
-                    <option value="minggu_ini">Minggu Ini</option>
-                    <option value="minggu_lalu">Minggu Lalu</option>
-                    <option value="bulan_ini">Bulan Ini</option>
-                    <option value="bulan_lalu">Bulan Lalu</option>
-                    <option value="tahun_ini">Tahun Ini</option>
-                    <option value="tahun_lalu">Tahun Lalu</option>
-                </select>
-                <button type="submit" class="btn btn-success">Export</button>
-                <a href="/pengeluaran" class="btn btn-danger">Batal</a>
+    <div class="col-md-12">
+        <div class="row">
+            <label for="" class="mb-2">Export Data</label>
+            <div class="col-md-4">
+                <form action="/pengeluaran/export" method="post">
+                    @csrf
+                    <div class="input-group">
+                        <span class="input-group-text">Pilih Data</span>
+                        <select name="ekspor" id="" class="form-select">
+                            <option value="">Semua Data</option>
+                            <option value="hari_ini">Hari Ini</option>
+                            <option value="kemarin">Kemarin</option>
+                            <option value="minggu_ini">Minggu Ini</option>
+                            <option value="minggu_lalu">Minggu Lalu</option>
+                            <option value="bulan_ini">Bulan Ini</option>
+                            <option value="bulan_lalu">Bulan Lalu</option>
+                            <option value="tahun_ini">Tahun Ini</option>
+                            <option value="tahun_lalu">Tahun Lalu</option>
+                        </select>
+                        <button type="submit" class="btn btn-success">Excel</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
     <hr>
     <div class="table-responsive">

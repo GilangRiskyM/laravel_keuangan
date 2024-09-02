@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EditMasukRequest;
-use App\Http\Requests\TambahPemasukanRequest;
 use App\Models\Masuk;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+
+use App\Http\Requests\EditMasukRequest;
 use Illuminate\Support\Facades\Session;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Http\Requests\TambahPemasukanRequest;
 
 class PemasukanController extends Controller
 {
@@ -165,5 +167,76 @@ class PemasukanController extends Controller
         }
 
         return redirect('/pemasukan/restore');
+    }
+
+    function export(Request $request)
+    {
+        $ekspor = $request->ekspor;
+
+        if ($ekspor == 'hari_ini') {
+            $sql = Masuk::whereDate('created_at', Carbon::today())->latest()->get();
+            $filter = 'Hari Ini tanggal ' . Carbon::today()->format('d-m-Y');
+        } elseif ($ekspor == 'kemarin') {
+            $sql = Masuk::whereDate('created_at', Carbon::yesterday())->latest()->get();
+            $filter = 'Kemarin tanggal ' . Carbon::yesterday()->format('d-m-Y');
+        } elseif ($ekspor == 'minggu_ini') {
+            $sql = Masuk::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->latest()->get();
+            $filter = 'Minggu Ini tanggal ' . Carbon::now()->startOfWeek()->format('d-m-Y') . ' sampai ' . Carbon::now()->endOfWeek()->format('d-m-Y');
+        } elseif ($ekspor == 'minggu_lalu') {
+            $sql = Masuk::whereBetween('created_at', [Carbon::now()->subWeek(), Carbon::now()])->latest()->get();
+            $filter = 'Minggu Lalu tanggal ' . Carbon::now()->subWeek()->format('d-m-Y') . ' sampai ' . Carbon::now()->format('d-m-Y');
+        } elseif ($ekspor == 'bulan_ini') {
+            $sql = Masuk::whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->latest()->get();
+            $filter = 'Bulan ' . Carbon::now()->month . ' tahun ' . Carbon::now()->year;
+        } elseif ($ekspor == 'bulan_lalu') {
+            $sql = Masuk::whereMonth('created_at', Carbon::now()->subMonth()->month)->whereYear('created_at', Carbon::now()->year)->latest()->get();
+            $filter = 'Bulan ' . Carbon::now()->subMonth()->month . ' tahun ' . Carbon::now()->year;
+        } elseif ($ekspor == 'tahun_ini') {
+            $sql = Masuk::whereYear('created_at', Carbon::now()->year)->latest()->get();
+            $filter = 'Tahun Ini ' . Carbon::now()->year;
+        } elseif ($ekspor == 'tahun_lalu') {
+            $sql = Masuk::whereYear('created_at', Carbon::now()->subYear()->year)->latest()->get();
+            $filter = 'Tahun Lalu ' . Carbon::now()->subYear()->year;
+        } else {
+            $sql = Masuk::latest()->get();
+            $filter  = 'Semua Data';
+        }
+
+        $total = 0;
+        foreach ($sql as $data) {
+            $total += $data->jumlah_pemasukan;
+        }
+
+        // dd($filter);
+
+        $spreadsheet = new Spreadsheet();
+        $filename = 'Laporan Pemasukan ' . $filter . '.xlsx';
+        $no = 1;
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = 2;
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Keterangan Pemasukan');
+        $sheet->setCellValue('C1', 'Keterangan Pemasukan');
+        $sheet->setCellValue('D1', 'Jumlah Pemasukan (Rp)');
+        $sheet->setCellValue('E1', 'Total Pemasukan (Rp)');
+
+        foreach ($sql as $data) {
+            $sheet->setCellValue('A' . $rows, $no++);
+            $sheet->setCellValue('B' . $rows, $data->ket_pemasukan);
+            $sheet->setCellValue('C' . $rows, date_format($data->created_at, 'd/m/Y'));
+            $sheet->setCellValue('D' . $rows, $data->jumlah_pemasukan);
+            $rows++;
+        }
+
+        $sheet->setCellValue('E2', $total);
+
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
     }
 }
