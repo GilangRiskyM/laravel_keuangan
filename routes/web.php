@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
 use Illuminate\Support\Facades\Route;
@@ -44,3 +45,5 @@ Route::get('/restore-pengeluaran/{id}', [PengeluaranController::class, 'restoreD
 Route::get('/pengeluaran/hapus_permanen/{id}', [PengeluaranController::class, 'deletePermanen']);
 Route::delete('/force_delete-pengeluaran/{id}', [PengeluaranController::class, 'forceDelete']);
 Route::post('/pengeluaran/export', [PengeluaranController::class, 'export']);
+
+Route::get('/laporan', [LaporanController::class, 'index']);
