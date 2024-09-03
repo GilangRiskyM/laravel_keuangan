@@ -47,3 +47,4 @@ Route::delete('/force_delete-pengeluaran/{id}', [PengeluaranController::class, '
 Route::post('/pengeluaran/export', [PengeluaranController::class, 'export']);
 
 Route::get('/laporan', [LaporanController::class, 'index']);
+Route::post('/laporan/export', [LaporanController::class, 'export']);
