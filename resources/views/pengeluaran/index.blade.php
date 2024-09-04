@@ -16,7 +16,7 @@
         <a href="/pengeluaran/restore" class="btn btn-secondary">Restore Data</a>
     </div>
     <hr>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <label class="mb-2">Filter Data</label>
         <form action="/pengeluaran" method="get">
             <div class="input-group">
@@ -85,7 +85,7 @@
                             <td>{{ $no++ }}</td>
                             <td>{{ $datum->ket_pengeluaran }}</td>
                             <td>{{ tgl_indonesia3($datum->created_at) }}</td>
-                            <td>Rp. {{ $datum->jumlah_pengeluaran }} ,-</td>
+                            <td>Rp. {{ number_format($datum->jumlah_pengeluaran, 0, ',', '.') }} ,-</td>
                             <td>
                                 <a href="/pengeluaran/edit/{{ $datum->id }}" class="btn btn-warning">Edit</a>
                                 <a href="/pengeluaran/hapus/{{ $datum->id }}" class="btn btn-danger my-2">Hapus</a>
@@ -106,5 +106,5 @@
         {{ $sql->appends(request()->query())->links() }}
     </div>
     <hr>
-    <h3>Total pengeluaran = Rp. {{ $total }} ,-</h3>
+    <h3>Total pengeluaran = Rp. {{ number_format($total, 0, ',', '.') }} ,-</h3>
 @endsection

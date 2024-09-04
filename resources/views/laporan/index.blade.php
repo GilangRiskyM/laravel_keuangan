@@ -79,7 +79,7 @@
                                         <td>{{ $no++ }}</td>
                                         <td>{{ $data->ket_pemasukan }}</td>
                                         <td>{{ tgl_indonesia3($data->created_at) }}</td>
-                                        <td>Rp. {{ $data->jumlah_pemasukan }} ,-</td>
+                                        <td>Rp. {{ number_format($data->jumlah_pemasukan, 0, ',', '.') }} ,-</td>
                                     </tr>
                                 @endforeach
                             @else
@@ -120,7 +120,7 @@
                                         <td>{{ $no++ }}</td>
                                         <td>{{ $data->ket_pengeluaran }}</td>
                                         <td>{{ tgl_indonesia3($data->created_at) }}</td>
-                                        <td>Rp. {{ $data->jumlah_pengeluaran }} ,-</td>
+                                        <td>Rp. {{ number_format($data->jumlah_pengeluaran, 0, ',', '.') }} ,-</td>
                                     </tr>
                                 @endforeach
                             @else
@@ -140,7 +140,7 @@
         </div>
     </div>
     <hr>
-    <h4>Jumlah Pemasukan = Rp. {{ $totalMasuk }} ,-</h4>
-    <h4>Jumlah Pengeluaran = Rp. {{ $totalKeluar }} ,-</h4>
-    <h4>Total Pendapatan = Rp. {{ $total }} ,-</h4>
+    <h4>Jumlah Pemasukan = Rp. {{ number_format($totalMasuk, 0, ',', '.') }} ,-</h4>
+    <h4>Jumlah Pengeluaran = Rp. {{ number_format($totalKeluar, 0, ',', '.') }} ,-</h4>
+    <h4>Total Pendapatan = Rp. {{ number_format($total, 0, ',', '.') }} ,-</h4>
 @endsection

@@ -85,10 +85,11 @@
                             <td>{{ $no++ }}</td>
                             <td>{{ $datum->ket_pemasukan }}</td>
                             <td>{{ tgl_indonesia3($datum->created_at) }}</td>
-                            <td>Rp. {{ $datum->jumlah_pemasukan }} ,-</td>
+                            <td>Rp. {{ number_format($datum->jumlah_pemasukan, 0, ',', '.') }} ,-</td>
                             <td>
                                 <a href="/pemasukan/edit/{{ $datum->id }}" class="btn btn-warning">Edit</a>
                                 <a href="/pemasukan/hapus/{{ $datum->id }}" class="btn btn-danger my-2">Hapus</a>
+                                <a href="/kuitansi/tambah/{{ $datum->id }}" class="btn btn-primary">Tambah Kuitansi</a>
                             </td>
                         </tr>
                     @endforeach
@@ -106,5 +107,5 @@
         {{ $sql->appends(request()->query())->links() }}
     </div>
     <hr>
-    <h3>Total Pemasukan = Rp. {{ $total }} ,-</h3>
+    <h3>Total Pemasukan = Rp. {{ number_format($total, 0, ',', '.') }} ,-</h3>
 @endsection

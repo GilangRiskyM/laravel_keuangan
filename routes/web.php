@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\KuitansiController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
@@ -16,9 +17,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/pemasukan', [PemasukanController::class, 'index']);
 Route::get('/pemasukan/tambah', [PemasukanController::class, 'create']);
@@ -48,3 +49,10 @@ Route::post('/pengeluaran/export', [PengeluaranController::class, 'export']);
 
 Route::get('/laporan', [LaporanController::class, 'index']);
 Route::post('/laporan/export', [LaporanController::class, 'export']);
+
+Route::get('/kuitansi', [KuitansiController::class, 'index']);
+Route::get('/kuitansi/tambah/{id}', [KuitansiController::class, 'create']);
+Route::post('/tambah-kuitansi', [KuitansiController::class, 'store']);
+Route::get('/kuitansi/edit/{id}', [KuitansiController::class, 'edit']);
+Route::put('/edit-kuitansi/{id}', [KuitansiController::class, 'update']);
+Route::get('/kuitansi/cetak/{id}', [KuitansiController::class, 'cetakKuitansi']);

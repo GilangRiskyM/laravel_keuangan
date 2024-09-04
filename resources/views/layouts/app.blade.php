@@ -16,6 +16,7 @@
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="/js/scripts.js"></script>
+    @stack('css')
 </head>
 
 <body class="sb-nav-fixed">
@@ -43,6 +44,10 @@
                         <a href="/pengeluaran" class="nav-link">
                             <div class="sb-nav-link-icon"><i class='bx bxs-file'></i></div>
                             Pengeluaran
+                        </a>
+                        <a href="/kuitansi" class="nav-link">
+                            <div class="sb-nav-link-icon"><i class='bx bxs-file'></i></div>
+                            Kuitansi
                         </a>
                         <a href="/laporan" class="nav-link">
                             <div class="sb-nav-link-icon"><i class='bx bxs-file-export'></i></div>
