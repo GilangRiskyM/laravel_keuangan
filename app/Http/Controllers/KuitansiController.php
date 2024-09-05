@@ -13,7 +13,23 @@ class KuitansiController extends Controller
 {
     function index(Request $request)
     {
-        $sql = Kuitansi::latest()->paginate(20)->onEachSide(2);
+        $cari = $request->cari;
+
+        if (isset($request->cari)) {
+            $sql = Kuitansi::latest()
+                ->where('nama', 'LIKE', '%' . $cari . '%')
+                ->orWhere('guna_byr1', 'LIKE', '%' . $cari . '%')
+                ->orWhere('guna_byr2', 'LIKE', '%' . $cari . '%')
+                ->orWhere('guna_byr3', 'LIKE', '%' . $cari . '%')
+                ->orWhere('jumlah', 'LIKE', '%' . $cari . '%')
+                ->orWhere('terbilang', 'LIKE', '%' . $cari . '%')
+                ->orWhere('penerima', 'LIKE', '%' . $cari . '%')
+                ->paginate(20)
+                ->onEachSide(2);
+        } else {
+            $sql = Kuitansi::latest()->paginate(20)->onEachSide(2);
+        }
+
         return view('kuitansi.index', [
             'data' => $sql,
         ]);
@@ -62,5 +78,24 @@ class KuitansiController extends Controller
     {
         $sql = Kuitansi::findOrFail($id);
         return view('kuitansi.cetak', ['data' => $sql]);
+    }
+
+    function delete($id)
+    {
+        $sql = Kuitansi::findOrFail($id);
+        return view('kuitansi.hapus', ['data' => $sql]);
+    }
+
+    function destroy($id)
+    {
+        $sql = Kuitansi::findOrFail($id);
+        $delete = $sql->delete();
+
+        if ($delete) {
+            Session::flash('status', 'success');
+            Session::flash('message', 'Hapus Data Kuitansi Berhasil!!!');
+        }
+
+        return redirect('/kuitansi');
     }
 }

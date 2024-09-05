@@ -12,11 +12,11 @@
     @endif
     <div class="col-12 col-sm-8 col-md-4">
         <label for="" class="mb-2">Cari Data</label>
-        <form action="/data_bahasa_inggris" method="get">
+        <form action="/kuitansi" method="get">
             <div class="input-group">
                 <input type="text" class="form-control ml-2" name="cari" placeholder="Kata Kunci" required>
                 <button type="submit" class="btn btn-primary"><i class='bx bx-search-alt-2'></i> Cari</button>
-                <a href="/data_bahasa_inggris" class="btn btn-danger">Batal</a>
+                <a href="/kuitansi" class="btn btn-danger">Batal</a>
             </div>
         </form>
     </div>
@@ -53,11 +53,19 @@
                             <td>{{ $datum->penerima }}</td>
                             <td>
                                 <a href="/kuitansi/edit/{{ $datum->id }}" class="btn btn-warning">Edit</a>
-                                <a href="/kuitansi/cetak/{{ $datum->id }}" class="btn btn-info">Print</a>
+                                <a href="/kuitansi/cetak/{{ $datum->id }}" class="btn btn-info my-2">Print</a>
+                                <a href="/kuitansi/hapus/{{ $datum->id }}" class="btn btn-danger">Hapus</a>
                             </td>
                         </tr>
                     @endforeach
                 @else
+                    <tr>
+                        <td colspan="7">
+                            <center>
+                                <h3>Data Kosong</h3>
+                            </center>
+                        </td>
+                    </tr>
                 @endif
             </tbody>
         </table>

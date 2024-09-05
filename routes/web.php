@@ -56,3 +56,5 @@ Route::post('/tambah-kuitansi', [KuitansiController::class, 'store']);
 Route::get('/kuitansi/edit/{id}', [KuitansiController::class, 'edit']);
 Route::put('/edit-kuitansi/{id}', [KuitansiController::class, 'update']);
 Route::get('/kuitansi/cetak/{id}', [KuitansiController::class, 'cetakKuitansi']);
+Route::get('/kuitansi/hapus/{id}', [KuitansiController::class, 'delete']);
+Route::delete('/destroy-kuitansi/{id}', [KuitansiController::class, 'destroy']);
